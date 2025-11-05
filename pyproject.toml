@@ -1,0 +1,8 @@
+[project.optional-dependencies]
+dev = [
+    "pytest",
+    "pytest-cov",
+    "numpy",
+    "scipy",
+    "scikit-learn",
+]
