@@ -1,15 +1,15 @@
 import numpy as np
-from debiasor import LinearCalibrationCorrection
+from debiasor import LccDebiaser
 
 def test_no_noise(no_noise_data):
     preds, targets = no_noise_data
-    lcc = LinearCalibrationCorrection().fit(preds, targets)
+    lcc = LccDebiaser().fit(preds, targets)
     corrected = lcc.debiased_mean(preds)
     assert np.isclose(corrected, preds.mean())
 
 def test_bias_reduction(noisy_data):
     cal_preds, cal_targets, preds, targets = noisy_data
-    lcc = LinearCalibrationCorrection().fit(cal_preds, cal_targets)
+    lcc = LccDebiaser().fit(cal_preds, cal_targets)
 
     naive = preds.mean()
     corrected = lcc.debiased_mean(preds)
@@ -18,7 +18,7 @@ def test_bias_reduction(noisy_data):
     assert abs(corrected - true) < abs(naive - true)
 
 def test_params_roundtrip():
-    lcc = LinearCalibrationCorrection()
+    lcc = LccDebiaser()
     params = lcc.get_params()
     lcc.set_params(**params)
     assert lcc.get_params() == params
@@ -26,7 +26,7 @@ def test_params_roundtrip():
 
 def test_debiased_predictions_mean_consistency(noisy_data):
     cal_preds, cal_targets, preds, targets = noisy_data
-    lcc = LinearCalibrationCorrection().fit(cal_preds, cal_targets)
+    lcc = LccDebiaser().fit(cal_preds, cal_targets)
 
     dp = lcc.debiased_predictions(preds)
     dm = lcc.debiased_mean(preds)

@@ -1,16 +1,16 @@
 import numpy as np
 import pytest
-from debiasor import TweedieCorrection
+from debiasor import TweedieDebiaser
 
 def test_no_noise(no_noise_data):
     preds, targets = no_noise_data
-    tweedie = TweedieCorrection().fit(preds, targets)
+    tweedie = TweedieDebiaser().fit(preds, targets)
     corrected = tweedie.debiased_mean(preds)
     assert np.isclose(corrected, preds.mean())
 
 def test_bias_reduction(noisy_data):
     cal_preds, cal_targets, preds, targets = noisy_data
-    tweedie = TweedieCorrection().fit(cal_preds, cal_targets)
+    tweedie = TweedieDebiaser().fit(cal_preds, cal_targets)
 
     naive = preds.mean()
     corrected = tweedie.debiased_mean(preds)
@@ -19,7 +19,7 @@ def test_bias_reduction(noisy_data):
     assert abs(corrected - true) < abs(naive - true)
 
 def test_params_roundtrip():
-    tweedie = TweedieCorrection(delta=1e-4)
+    tweedie = TweedieDebiaser(delta=1e-4)
     params = tweedie.get_params()
     tweedie.set_params(**params)
     assert tweedie.get_params() == params
@@ -38,7 +38,7 @@ def test_sigma_from_separate_calibration():
     sigma_preds = rng.random(n_sigma)
     sigma_targets = sigma_preds + rng.normal(0, noise_sigma, n_sigma)
 
-    tweedie = TweedieCorrection().fit(
+    tweedie = TweedieDebiaser().fit(
         cal_preds,
         cal_targets,
         cal_predictions_sigma=sigma_preds,
@@ -53,14 +53,14 @@ def test_sigma_from_separate_calibration():
 def test_sigma_args_must_both_be_provided(noisy_data):
     cal_preds, cal_targets, _, _ = noisy_data
     with pytest.raises(ValueError):
-        TweedieCorrection().fit(cal_preds, cal_targets, cal_predictions_sigma=np.ones_like(cal_preds))
+        TweedieDebiaser().fit(cal_preds, cal_targets, cal_predictions_sigma=np.ones_like(cal_preds))
     with pytest.raises(ValueError):
-        TweedieCorrection().fit(cal_preds, cal_targets, cal_targets_sigma=np.ones_like(cal_targets))
+        TweedieDebiaser().fit(cal_preds, cal_targets, cal_targets_sigma=np.ones_like(cal_targets))
 
 
 def test_debiased_predictions_mean_consistency(noisy_data):
     cal_preds, cal_targets, preds, targets = noisy_data
-    tweedie = TweedieCorrection().fit(cal_preds, cal_targets)
+    tweedie = TweedieDebiaser().fit(cal_preds, cal_targets)
 
     dp = tweedie.debiased_predictions(preds)
     dm = tweedie.debiased_mean(preds)

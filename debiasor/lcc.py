@@ -3,7 +3,7 @@ import numpy as np
 from sklearn.linear_model import LinearRegression
 from .base import BaseDebiaser
 
-class LinearCalibrationCorrection(BaseDebiaser):
+class LccDebiaser(BaseDebiaser):
     """
     Linear Calibration Correction (LCC)
     """
@@ -11,7 +11,7 @@ class LinearCalibrationCorrection(BaseDebiaser):
     def __init__(self):
         pass
 
-    def fit(self, cal_predictions: np.ndarray, cal_targets: np.ndarray) -> "LinearCalibrationCorrection":
+    def fit(self, cal_predictions: np.ndarray, cal_targets: np.ndarray) -> "LccDebiaser":
         cal_predictions_ = np.asarray(cal_predictions)
         cal_targets_ = np.asarray(cal_targets)
 

@@ -3,7 +3,7 @@ import numpy as np
 from scipy.stats import gaussian_kde
 from .base import BaseDebiaser
 
-class TweedieCorrection(BaseDebiaser):
+class TweedieDebiaser(BaseDebiaser):
     """
     Tweedie's correction
     """
@@ -13,7 +13,7 @@ class TweedieCorrection(BaseDebiaser):
 
     def fit(self, cal_predictions: np.ndarray, cal_targets: np.ndarray, 
             cal_predictions_sigma: np.ndarray = None, cal_targets_sigma: np.ndarray = None
-            ) -> "TweedieCorrection":
+            ) -> "TweedieDebiaser":
         cal_predictions_ = np.asarray(cal_predictions)
         cal_targets_ = np.asarray(cal_targets)
 

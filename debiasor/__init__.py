@@ -1,2 +1,2 @@
-from .lcc import LinearCalibrationCorrection
-from .tweedie import TweedieCorrection
+from .lcc import LccDebiaser
+from .tweedie import TweedieDebiaser
