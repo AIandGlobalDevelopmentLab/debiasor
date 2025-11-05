@@ -1,4 +1,4 @@
-# Debiasor
+# debiasor
 
 <p align="center">
     <a style="text-decoration:none !important;" href="https://arxiv.org/abs/2508.01341" alt="arXiv"><img src="https://img.shields.io/badge/paper-arXiv-red" /></a>
