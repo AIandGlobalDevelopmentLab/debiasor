@@ -56,3 +56,14 @@ def test_sigma_args_must_both_be_provided(noisy_data):
         TweedieCorrection().fit(cal_preds, cal_targets, cal_predictions_sigma=np.ones_like(cal_preds))
     with pytest.raises(ValueError):
         TweedieCorrection().fit(cal_preds, cal_targets, cal_targets_sigma=np.ones_like(cal_targets))
+
+
+def test_debiased_predictions_mean_consistency(noisy_data):
+    cal_preds, cal_targets, preds, targets = noisy_data
+    tweedie = TweedieCorrection().fit(cal_preds, cal_targets)
+
+    dp = tweedie.debiased_predictions(preds)
+    dm = tweedie.debiased_mean(preds)
+
+    # mean of per-element debiased predictions should equal debiased_mean
+    assert np.isclose(dp.mean(), dm)

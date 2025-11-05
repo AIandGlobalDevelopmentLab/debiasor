@@ -22,3 +22,14 @@ def test_params_roundtrip():
     params = lcc.get_params()
     lcc.set_params(**params)
     assert lcc.get_params() == params
+
+
+def test_debiased_predictions_mean_consistency(noisy_data):
+    cal_preds, cal_targets, preds, targets = noisy_data
+    lcc = LinearCalibrationCorrection().fit(cal_preds, cal_targets)
+
+    dp = lcc.debiased_predictions(preds)
+    dm = lcc.debiased_mean(preds)
+
+    # mean of the per-element debiased predictions should equal debiased_mean
+    assert np.isclose(dp.mean(), dm)

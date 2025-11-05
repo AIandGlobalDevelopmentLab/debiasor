@@ -13,6 +13,14 @@ class BaseDebiaser:
     def debiased_mean(self, predictions: np.ndarray) -> float:
         raise NotImplementedError
 
+    def debiased_predictions(self, predictions: np.ndarray) -> np.ndarray:
+        """Return debiased predictions for each input (no reduction to a scalar).
+
+        Implementations should mirror the behavior of `debiased_mean` but return
+        the full array of debiased values instead of the mean.
+        """
+        raise NotImplementedError
+
     def get_params(self, deep: bool = True) -> Dict[str, Any]:
         return {k: v for k, v in self.__dict__.items() if not k.endswith("_")}
 

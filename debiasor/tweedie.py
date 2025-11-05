@@ -44,3 +44,14 @@ class TweedieCorrection(BaseDebiaser):
         mean_pred = np.mean(predictions)
         scores = self._score(predictions)
         return float(mean_pred - self.sigma_**2 * np.mean(scores))
+
+    def debiased_predictions(self, predictions: np.ndarray) -> np.ndarray:
+        """
+        Return debiased predictions (vectorized) without taking the mean.
+        """
+        if not hasattr(self, "sigma_"):
+            raise RuntimeError("Call .fit() before .debiased_predictions().")
+
+        preds = np.asarray(predictions)
+        scores = self._score(preds)
+        return preds - self.sigma_**2 * scores

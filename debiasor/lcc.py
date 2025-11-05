@@ -28,3 +28,13 @@ class LinearCalibrationCorrection(BaseDebiaser):
 
         mean_pred = np.mean(predictions)
         return float((mean_pred - self.intercept_) / self.slope_)
+
+    def debiased_predictions(self, predictions: np.ndarray) -> np.ndarray:
+        """
+        Return debiased predictions (vectorized) without taking the mean.
+        """
+        if not hasattr(self, "slope_"):
+            raise RuntimeError("Call .fit() before .debiased_predictions().")
+
+        preds = np.asarray(predictions)
+        return (preds - self.intercept_) / self.slope_
