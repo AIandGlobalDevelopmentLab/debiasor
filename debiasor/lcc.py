@@ -12,11 +12,11 @@ class LinearCalibrationCorrection(BaseDebiaser):
         pass
 
     def fit(self, cal_predictions: np.ndarray, cal_targets: np.ndarray) -> "LinearCalibrationCorrection":
-        self.cal_predictions_ = np.asarray(cal_predictions)
-        self.cal_targets_ = np.asarray(cal_targets)
+        cal_predictions_ = np.asarray(cal_predictions)
+        cal_targets_ = np.asarray(cal_targets)
 
         model = LinearRegression()
-        model.fit(self.cal_targets_.reshape(-1, 1), self.cal_predictions_)
+        model.fit(cal_targets_.reshape(-1, 1), cal_predictions_)
 
         self.intercept_ = model.intercept_
         self.slope_ = model.coef_[0]

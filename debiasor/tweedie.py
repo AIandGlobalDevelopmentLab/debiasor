@@ -11,12 +11,25 @@ class TweedieCorrection(BaseDebiaser):
     def __init__(self, delta: float = 1e-5):
         self.delta = delta
 
-    def fit(self, cal_predictions: np.ndarray, cal_targets: np.ndarray) -> "TweedieCorrection":
-        self.cal_predictions_ = np.asarray(cal_predictions)
-        self.cal_targets_ = np.asarray(cal_targets)
+    def fit(self, cal_predictions: np.ndarray, cal_targets: np.ndarray, 
+            cal_predictions_sigma: np.ndarray = None, cal_targets_sigma: np.ndarray = None
+            ) -> "TweedieCorrection":
+        cal_predictions_ = np.asarray(cal_predictions)
+        cal_targets_ = np.asarray(cal_targets)
 
-        self.sigma_ = np.std(self.cal_predictions_ - self.cal_targets_)
-        self.kde_ = gaussian_kde(self.cal_predictions_)
+        # If a specific calibration set is provided for uncertainties, use it to estimate sigma
+        # Otherwise, estimate sigma from the residuals on the calibration set
+        if cal_predictions_sigma is not None and cal_targets_sigma is not None:
+            cal_predictions_sigma_ = np.asarray(cal_predictions_sigma)
+            cal_targets_sigma_ = np.asarray(cal_targets_sigma)
+        elif cal_predictions_sigma is None and cal_targets_sigma is None:
+            cal_predictions_sigma_ = cal_predictions_
+            cal_targets_sigma_ = cal_targets_
+        else:
+            raise ValueError("Either both or neither of cal_predictions_sigma and cal_targets_sigma must be provided.")
+
+        self.sigma_ = np.std(cal_predictions_sigma_ - cal_targets_sigma_)
+        self.kde_ = gaussian_kde(cal_predictions_)
         return self
 
     def _score(self, y: np.ndarray) -> np.ndarray:
